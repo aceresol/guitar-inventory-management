@@ -1,4 +1,3 @@
 12345,10.0,Anthony,123abc,Wood,brown,tan
 12347,11.0,Anthony,145fpg,Electric,white,white
-12347,11.0,Anthony,145fpg,Electric,white,white
 12348,11.0,Anthony,145fpg,Electric,white,white

@@ -26,8 +26,8 @@ class InventoryRepositoryTest {
 
     @Test
     void getGuitar() throws IOException {
-        inventoryRepository.addGuitar(test);
-        inventoryRepository.addGuitar(test3);
+//        inventoryRepository.addGuitar(test);
+//        inventoryRepository.addGuitar(test3);
         assertEquals(test.getSerialNumber(), inventoryRepository.getGuitar("12345").getSerialNumber());
         assertEquals(test3.getSerialNumber(), inventoryRepository.getGuitar("12347").getSerialNumber());
     }

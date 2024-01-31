@@ -74,22 +74,26 @@ public class InventoryRepository {
         Path path = Paths.get(DATABASE_NAME);
         List<String> data = Files.readAllLines(path);
         System.out.println(data.size());
-        boolean inDatabase = false;
+        double price = 0;
+        String builder = "";
+        String model = "";
+        String type = "";
+        String backWood = "";
+        String topWood = "";
         for (String line : data) {
             String[] words = line.split(",");
             if (Objects.equals(words[0], serial)) {
-                inDatabase = true;
-                break;
+                price = Double.parseDouble(words[1]);
+                builder = words[2];
+                model = words[3];
+                type = words[4];
+                backWood = words[5];
+                topWood = words[6];
+                return new Guitar(serial, price, builder, model, type, backWood, topWood);
             }
         }
-        if (inDatabase){
-            for (Guitar g : guitars){
-                String currentSerial = g.getSerialNumber();
-                if (Objects.equals(currentSerial, serial)){
-                    return g;
-                }
-            }
-        }
+
+
         return null;
     }
 
