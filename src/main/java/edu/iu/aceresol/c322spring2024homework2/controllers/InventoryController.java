@@ -1,6 +1,9 @@
 package edu.iu.aceresol.c322spring2024homework2.controllers;
 
+import edu.iu.aceresol.c322spring2024homework2.model.Builder;
 import edu.iu.aceresol.c322spring2024homework2.model.Guitar;
+import edu.iu.aceresol.c322spring2024homework2.model.Type;
+import edu.iu.aceresol.c322spring2024homework2.model.Wood;
 import edu.iu.aceresol.c322spring2024homework2.repository.InventoryRepository;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,11 +22,11 @@ public class InventoryController {
     @GetMapping("/search")
     public List<Guitar> search(@RequestParam String serialNumber,
                                @RequestParam double price,
-                               @RequestParam String builder,
+                               @RequestParam Builder builder,
                                @RequestParam String model,
-                               @RequestParam String type,
-                               @RequestParam String backWood,
-                               @RequestParam String topWood) {
+                               @RequestParam Type type,
+                               @RequestParam Wood backWood,
+                               @RequestParam Wood topWood) {
         try {
             System.out.println(serialNumber);
             System.out.println(price);

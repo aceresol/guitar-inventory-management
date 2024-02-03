@@ -1,3 +1,4 @@
-12345,10.0,Anthony,123abc,Wood,brown,tan
-12347,11.0,Anthony,145fpg,Electric,white,white
-12348,11.0,Anthony,145fpg,Electric,white,white
+12345,10.0,Fender,123abc,acoustic,Maple,Indian Rosewood
+12347,11.0,Gibson,145fpg,acoustic,Cedar,Sitka
+12348,11.0,PRS,145fpg,electric,Indian Rosewood,Brazilian Rosewood
+12349,11.0,PRS,145fpg,electric,Maple,Brazilian Rosewood

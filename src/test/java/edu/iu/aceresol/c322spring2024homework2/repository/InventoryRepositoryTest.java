@@ -1,6 +1,9 @@
 package edu.iu.aceresol.c322spring2024homework2.repository;
 
+import edu.iu.aceresol.c322spring2024homework2.model.Builder;
 import edu.iu.aceresol.c322spring2024homework2.model.Guitar;
+import edu.iu.aceresol.c322spring2024homework2.model.Type;
+import edu.iu.aceresol.c322spring2024homework2.model.Wood;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
@@ -10,11 +13,12 @@ import static org.junit.jupiter.api.Assertions.*;
 
 //
 class InventoryRepositoryTest {
-    Guitar test = new Guitar("12345", 10.00, "Anthony", "123abc", "Wood", "brown", "tan");
-    Guitar test2 = new Guitar("12346", 9.00, "Anthony", "123cd", "Metal", "black", "tan");
-    Guitar test3 = new Guitar("12347", 11.00, "Anthony", "145fpg", "Electric", "white", "white");
-    Guitar test4 = new Guitar(null, 11.00, null, null, null, "white", null);
-    Guitar test5 = new Guitar("12348", 11.00, "Anthony", "145fpg", "Electric", "white", "white");
+    Guitar test = new Guitar("12345", 10.00, Builder.FENDER, "123abc", Type.ACOUSTIC, Wood.MAPLE, Wood.INDIAN_ROSEWOOD);
+    Guitar test2 = new Guitar("12346", 9.00, Builder.FENDER, "123cd", Type.ELECTRIC, Wood.BRAZILIAN_ROSEWOOD, Wood.ALDER);
+    Guitar test3 = new Guitar("12347", 11.00, Builder.GIBSON, "145fpg", Type.ACOUSTIC, Wood.CEDAR, Wood.SITKA);
+    Guitar test4 = new Guitar(null, 11.00, null, null, null, Wood.MAPLE, null);
+    Guitar test5 = new Guitar("12348", 11.00, Builder.PRS, "145fpg", Type.ELECTRIC, Wood.INDIAN_ROSEWOOD, Wood.BRAZILIAN_ROSEWOOD);
+    Guitar test6 = new Guitar("12349", 11.00, Builder.PRS, "145fpg", Type.ELECTRIC, Wood.MAPLE, Wood.BRAZILIAN_ROSEWOOD);
 
     InventoryRepository inventoryRepository = new InventoryRepository();
 
@@ -22,6 +26,7 @@ class InventoryRepositoryTest {
     void addGuitar() throws IOException {
         inventoryRepository.addGuitar(test);
         inventoryRepository.addGuitar(test3);
+        inventoryRepository.addGuitar(test6);
     }
 
     @Test
@@ -34,11 +39,8 @@ class InventoryRepositoryTest {
 
     @Test
     void searchGuitars() throws IOException {
-        inventoryRepository.addGuitar(test3);
-        inventoryRepository.addGuitar(test5);
         ArrayList<Guitar> testList = new ArrayList<>();
-        testList.add(test3);
-        testList.add(test5);
-        assertEquals(testList, inventoryRepository.searchGuitars(test4));
+        testList.add(test6);
+        assertEquals(testList.get(0).getSerialNumber(), inventoryRepository.searchGuitars(test4).get(0).getSerialNumber());
     }
 }

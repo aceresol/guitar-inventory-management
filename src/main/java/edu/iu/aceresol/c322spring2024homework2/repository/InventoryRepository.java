@@ -1,6 +1,9 @@
 package edu.iu.aceresol.c322spring2024homework2.repository;
 
+import edu.iu.aceresol.c322spring2024homework2.model.Builder;
 import edu.iu.aceresol.c322spring2024homework2.model.Guitar;
+import edu.iu.aceresol.c322spring2024homework2.model.Type;
+import edu.iu.aceresol.c322spring2024homework2.model.Wood;
 import org.springframework.stereotype.Component;
 
 import java.io.BufferedWriter;
@@ -28,11 +31,7 @@ public class InventoryRepository {
                 StandardOpenOption.APPEND);
     }
 
-    private List<Guitar> guitars;
 
-    public InventoryRepository(){
-        this.guitars = new ArrayList<>();
-    }
 
     public boolean addGuitar(Guitar g) throws IOException{
         Path path = Paths.get(DATABASE_NAME);
@@ -40,7 +39,6 @@ public class InventoryRepository {
                 g.getPrice() +
                 "," + g.getBuilder() + "," + g.getModel() + "," + g.getType() + "," + g.getBackWood() + "," + g.getTopWood();
         appendToFile(path, data + NEW_LINE);
-        guitars.add(g);
         return true;
     }
 
@@ -75,20 +73,20 @@ public class InventoryRepository {
         List<String> data = Files.readAllLines(path);
         System.out.println(data.size());
         double price = 0;
-        String builder = "";
+        Builder builder;
         String model = "";
-        String type = "";
-        String backWood = "";
-        String topWood = "";
+        Type type;
+        Wood backWood;
+        Wood topWood;
         for (String line : data) {
             String[] words = line.split(",");
             if (Objects.equals(words[0], serial)) {
                 price = Double.parseDouble(words[1]);
-                builder = words[2];
+                builder = Builder.fromString(words[2]);
                 model = words[3];
-                type = words[4];
-                backWood = words[5];
-                topWood = words[6];
+                type = Type.fromString(words[4]);
+                backWood = Wood.fromString(words[5]);
+                topWood = Wood.fromString(words[6]);
                 return new Guitar(serial, price, builder, model, type, backWood, topWood);
             }
         }
@@ -98,13 +96,35 @@ public class InventoryRepository {
     }
 
 
-    public List<Guitar> find(String serialNumber, double price, String builder, String model, String type, String backWood, String topWood) throws IOException {
+    public List<Guitar> find(String serialNumber, double price, Builder builder, String model, Type type, Wood backWood, Wood topWood) throws IOException {
         Guitar g = new Guitar(serialNumber, price, builder, model, type, backWood, topWood);
         return searchGuitars(g);
     }
 
-    public List<Guitar> searchGuitars(Guitar g){
+    public List<Guitar> searchGuitars(Guitar g) throws IOException {
+        ArrayList<Guitar> guitars = new ArrayList<>();
         ArrayList<Guitar> result = new ArrayList<>();
+        Path path = Paths.get(DATABASE_NAME);
+        List<String> data = Files.readAllLines(path);
+        System.out.println(data.size());
+        String serial;
+        double price = 0;
+        Builder builder;
+        String model = "";
+        Type type;
+        Wood backWood;
+        Wood topWood;
+        for (String line : data) {
+            String[] words = line.split(",");
+                serial = words[0];
+                price = Double.parseDouble(words[1]);
+                builder = Builder.fromString(words[2]);
+                model = words[3];
+                type = Type.fromString(words[4]);
+                backWood = Wood.fromString(words[5]);
+                topWood = Wood.fromString(words[6]);
+                guitars.add(new Guitar(serial, price, builder, model, type, backWood, topWood)) ;
+        }
         int attributes = 0;
         for (Guitar guitar : guitars){
             int matchingAttributes = 0;
