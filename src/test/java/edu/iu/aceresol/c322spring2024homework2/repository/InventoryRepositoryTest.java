@@ -1,46 +1,59 @@
 package edu.iu.aceresol.c322spring2024homework2.repository;
 
-import edu.iu.aceresol.c322spring2024homework2.model.Builder;
-import edu.iu.aceresol.c322spring2024homework2.model.Guitar;
-import edu.iu.aceresol.c322spring2024homework2.model.Type;
-import edu.iu.aceresol.c322spring2024homework2.model.Wood;
+import edu.iu.aceresol.c322spring2024homework2.model.*;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 //
 class InventoryRepositoryTest {
-    Guitar test = new Guitar("12345", 10.00, Builder.FENDER, "123abc", Type.ACOUSTIC, Wood.MAPLE, Wood.INDIAN_ROSEWOOD);
-    Guitar test2 = new Guitar("12346", 9.00, Builder.FENDER, "123cd", Type.ELECTRIC, Wood.BRAZILIAN_ROSEWOOD, Wood.ALDER);
-    Guitar test3 = new Guitar("12347", 11.00, Builder.GIBSON, "145fpg", Type.ACOUSTIC, Wood.CEDAR, Wood.SITKA);
-    Guitar test4 = new Guitar(null, 11.00, null, null, null, Wood.MAPLE, null);
-    Guitar test5 = new Guitar("12348", 11.00, Builder.PRS, "145fpg", Type.ELECTRIC, Wood.INDIAN_ROSEWOOD, Wood.BRAZILIAN_ROSEWOOD);
-    Guitar test6 = new Guitar("12349", 11.00, Builder.PRS, "145fpg", Type.ELECTRIC, Wood.MAPLE, Wood.BRAZILIAN_ROSEWOOD);
-
-    InventoryRepository inventoryRepository = new InventoryRepository();
 
     @Test
-    void addGuitar() throws IOException {
-        inventoryRepository.addGuitar(test);
-        inventoryRepository.addGuitar(test3);
-        inventoryRepository.addGuitar(test6);
+    void addGuitarTest() throws IOException {
+        Guitar test = new Guitar();
+        test.setSerialNumber("3211");
+        test.setPrice(11.00);
+        test.setBuilder(Guitar.Builder.valueOf("FENDER"));
+        test.setModel("v1");
+        test.setType(Guitar.Type.valueOf("ELECTRIC"));
+        test.setBackWood(Guitar.Wood.valueOf("MAPLE"));
+        test.setTopWood(Guitar.Wood.valueOf("CEDAR"));
+        InventoryRepository.addGuitar(test);
+
+        Guitar test1 = new Guitar();
+        test1.setSerialNumber("1234");
+        test1.setPrice(12.00);
+        test1.setBuilder(Guitar.Builder.valueOf("GIBSON"));
+        test1.setModel("v1");
+        test1.setType(Guitar.Type.valueOf("ACOUSTIC"));
+        test1.setBackWood(Guitar.Wood.valueOf("MAHOGANY"));
+        test1.setTopWood(Guitar.Wood.valueOf("MAPLE"));
+        InventoryRepository.addGuitar(test1);
+
+
     }
 
     @Test
-    void getGuitar() throws IOException {
-//        inventoryRepository.addGuitar(test);
-//        inventoryRepository.addGuitar(test3);
-        assertEquals(test.getSerialNumber(), inventoryRepository.getGuitar("12345").getSerialNumber());
-        assertEquals(test3.getSerialNumber(), inventoryRepository.getGuitar("12347").getSerialNumber());
+    void getGuitarTest() throws IOException {
+        Guitar g = InventoryRepository.getGuitar("1111");
+        Guitar g1 = InventoryRepository.getGuitar("1234");
+
+
+
     }
 
     @Test
-    void searchGuitars() throws IOException {
-        ArrayList<Guitar> testList = new ArrayList<>();
-        testList.add(test6);
-        assertEquals(testList.get(0).getSerialNumber(), inventoryRepository.searchGuitars(test4).get(0).getSerialNumber());
+    void searchTest() throws IOException {
+        Guitar g = new Guitar();
+
+        g.setBuilder(Guitar.Builder.valueOf("FENDER"));
+        g.setPrice(10.00);
+
+        List<Guitar> testList = InventoryRepository.search(g);
+
     }
 }

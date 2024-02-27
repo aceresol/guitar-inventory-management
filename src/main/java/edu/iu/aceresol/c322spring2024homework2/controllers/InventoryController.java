@@ -1,9 +1,6 @@
 package edu.iu.aceresol.c322spring2024homework2.controllers;
 
-import edu.iu.aceresol.c322spring2024homework2.model.Builder;
-import edu.iu.aceresol.c322spring2024homework2.model.Guitar;
-import edu.iu.aceresol.c322spring2024homework2.model.Type;
-import edu.iu.aceresol.c322spring2024homework2.model.Wood;
+import edu.iu.aceresol.c322spring2024homework2.model.*;
 import edu.iu.aceresol.c322spring2024homework2.repository.InventoryRepository;
 import org.springframework.web.bind.annotation.*;
 
@@ -11,6 +8,7 @@ import java.io.IOException;
 import java.util.List;
 
 @RestController
+@CrossOrigin
 @RequestMapping("/inventory")
 public class InventoryController {
 
@@ -18,42 +16,51 @@ public class InventoryController {
     public InventoryController(InventoryRepository inventoryRepository){
         this.inventoryRepository = inventoryRepository;
     }
-
-    @GetMapping("/search")
-    public List<Guitar> search(@RequestParam String serialNumber,
-                               @RequestParam double price,
-                               @RequestParam Builder builder,
-                               @RequestParam String model,
-                               @RequestParam Type type,
-                               @RequestParam Wood backWood,
-                               @RequestParam Wood topWood) {
+    @PostMapping("/add")
+    public boolean add(@RequestBody Guitar data) {
         try {
-            System.out.println(serialNumber);
-            System.out.println(price);
-            System.out.println(builder);
-            System.out.println(model);
-            System.out.println(type);
-            System.out.println(backWood);
-            System.out.println(topWood);
-            return inventoryRepository.find(serialNumber, price, builder, model, type, backWood, topWood);
-        } catch (IOException e) {
-            return null;
-        }
-    }
-
-    @PostMapping
-    public boolean add(@RequestBody Guitar g){
-        try {
-            return inventoryRepository.addGuitar(g);
+            return inventoryRepository.addGuitar(data);
         } catch (IOException e){
             return false;
         }
     }
 
-    @GetMapping("/find")
-    public Guitar find(@RequestParam String serialNumber) throws IOException {
-        return inventoryRepository.getGuitar(serialNumber);
+    @RequestMapping("/findAll")
+    public List<Guitar> findAll() {
+        try {
+            return inventoryRepository.findAll();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
+    @GetMapping("/search")
+    public List<Guitar> search (@RequestParam String serialNumber, @RequestParam double price, @RequestParam Guitar.Builder builder, @RequestParam String model,@RequestParam Guitar.Type type,@RequestParam Guitar.Wood backWood, @RequestParam Guitar.Wood topWood){
+        try {
+            Guitar g = new Guitar();
 
+            g.setSerialNumber(serialNumber);
+            g.setPrice(price);
+            g.setBuilder(builder);
+            g.setModel(model);
+            g.setType(type);
+            g.setBackWood(backWood);
+            g.setTopWood(topWood);
+
+            return inventoryRepository.search(g);
+        } catch (IOException e){
+            return null;
+        }
+    }
+
+    @GetMapping("/find/{serialNumber}")
+    public Guitar find (@RequestParam String serialNumber){
+        try {
+            System.out.println(serialNumber);
+
+            return inventoryRepository.getGuitar(serialNumber);
+        } catch (IOException e){
+            return null;
+        }
+    }
 }

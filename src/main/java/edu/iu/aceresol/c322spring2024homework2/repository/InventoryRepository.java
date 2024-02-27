@@ -1,9 +1,6 @@
 package edu.iu.aceresol.c322spring2024homework2.repository;
 
-import edu.iu.aceresol.c322spring2024homework2.model.Builder;
-import edu.iu.aceresol.c322spring2024homework2.model.Guitar;
-import edu.iu.aceresol.c322spring2024homework2.model.Type;
-import edu.iu.aceresol.c322spring2024homework2.model.Wood;
+import edu.iu.aceresol.c322spring2024homework2.model.*;
 import org.springframework.stereotype.Component;
 
 import java.io.BufferedWriter;
@@ -20,146 +17,113 @@ import java.util.Objects;
 
 @Component
 public class InventoryRepository {
-
     private static final String NEW_LINE = System.lineSeparator();
     private static final String DATABASE_NAME = "guitars_database.txt";
-    private static void appendToFile(Path path, String content)
-            throws IOException {
+    private static void appendToFile(Path path, String content) throws IOException {
         Files.write(path,
                 content.getBytes(StandardCharsets.UTF_8),
                 StandardOpenOption.CREATE,
                 StandardOpenOption.APPEND);
     }
 
-
-
-    public boolean addGuitar(Guitar g) throws IOException{
+    public static boolean addGuitar(Guitar guitar) throws IOException {
         Path path = Paths.get(DATABASE_NAME);
-        String data = g.getSerialNumber() + "," +
-                g.getPrice() +
-                "," + g.getBuilder() + "," + g.getModel() + "," + g.getType() + "," + g.getBackWood() + "," + g.getTopWood();
+        String data = guitar.getSerialNumber() + "," +
+                guitar.getPrice() + "," + guitar.getBuilder()
+                + "," + guitar.getModel() + "," + guitar.getType()
+                + "," + guitar.getBackWood() + "," + guitar.getTopWood();
         appendToFile(path, data + NEW_LINE);
         return true;
     }
 
-//    public void addGuitar(Guitar g){
-//        String serialNumber = g.getSerialNumber();
-//        double price = g.getPrice();
-//        String builder = g.getBuilder();
-//        String model = g.getModel();
-//        String type = g.getType();
-//        String backWood = g.getBackWood();
-//        String topWood = g.getTopWood();
-//
-//        try (BufferedWriter writer = new BufferedWriter(new FileWriter("guitars_database.txt", true))) {
-//            String guitarData = String.format("%s,%f,%s,%s,%s,%s,%s%n",
-//                    serialNumber,
-//                    price,
-//                    builder,
-//                    model,
-//                    type,
-//                    backWood,
-//                    topWood);
-//
-//            writer.write(guitarData);
-//
-//        } catch (IOException e) {
-//            System.err.println("Error writing to the file: " + e.getMessage());
-//        }
-//    }
-
-    public Guitar getGuitar(String serial) throws IOException {
+    public static List<Guitar> findAll() throws IOException {
+        List<Guitar> result = new ArrayList<>();
         Path path = Paths.get(DATABASE_NAME);
         List<String> data = Files.readAllLines(path);
-        System.out.println(data.size());
-        double price = 0;
-        Builder builder;
-        String model = "";
-        Type type;
-        Wood backWood;
-        Wood topWood;
-        for (String line : data) {
+        for (String line : data){
             String[] words = line.split(",");
-            if (Objects.equals(words[0], serial)) {
-                price = Double.parseDouble(words[1]);
-                builder = Builder.fromString(words[2]);
-                model = words[3];
-                type = Type.fromString(words[4]);
-                backWood = Wood.fromString(words[5]);
-                topWood = Wood.fromString(words[6]);
-                return new Guitar(serial, price, builder, model, type, backWood, topWood);
-            }
+            Guitar g = new Guitar();
+            g.setSerialNumber(words[0]);
+            g.setPrice(Double.parseDouble(words[1]));
+            g.setBuilder(Guitar.Builder.valueOf(words[2].toUpperCase()));
+            g.setModel(words[3]);
+            g.setType(Guitar.Type.valueOf(words[4].toUpperCase()));
+            g.setBackWood(Guitar.Wood.valueOf(words[5].toUpperCase()));
+            g.setTopWood(Guitar.Wood.valueOf(words[6].toUpperCase()));
+
+            result.add(g);
         }
-
-
-        return null;
+        return result;
     }
 
-
-    public List<Guitar> find(String serialNumber, double price, Builder builder, String model, Type type, Wood backWood, Wood topWood) throws IOException {
-        Guitar g = new Guitar(serialNumber, price, builder, model, type, backWood, topWood);
-        return searchGuitars(g);
-    }
-
-    public List<Guitar> searchGuitars(Guitar g) throws IOException {
-        ArrayList<Guitar> guitars = new ArrayList<>();
-        ArrayList<Guitar> result = new ArrayList<>();
-        Path path = Paths.get(DATABASE_NAME);
-        List<String> data = Files.readAllLines(path);
-        System.out.println(data.size());
-        String serial;
-        double price = 0;
-        Builder builder;
-        String model = "";
-        Type type;
-        Wood backWood;
-        Wood topWood;
-        for (String line : data) {
-            String[] words = line.split(",");
-                serial = words[0];
-                price = Double.parseDouble(words[1]);
-                builder = Builder.fromString(words[2]);
-                model = words[3];
-                type = Type.fromString(words[4]);
-                backWood = Wood.fromString(words[5]);
-                topWood = Wood.fromString(words[6]);
-                guitars.add(new Guitar(serial, price, builder, model, type, backWood, topWood)) ;
-        }
-        int attributes = 0;
-        for (Guitar guitar : guitars){
-            int matchingAttributes = 0;
-            if (Objects.equals(g.getSerialNumber(), guitar.getSerialNumber())){
-                matchingAttributes++;
-            }
-            if (Double.compare(g.getPrice(), guitar.getPrice()) == 0) {
-                matchingAttributes++;
-            }
-            if (Objects.equals(g.getBuilder(), guitar.getBuilder())){
-                matchingAttributes++;
-            }
-            if (Objects.equals(g.getModel(), guitar.getModel())){
-                matchingAttributes++;
-            }
-            if (Objects.equals(g.getType(), guitar.getType())){
-                matchingAttributes++;
-            }
-            if (Objects.equals(g.getBackWood(), guitar.getBackWood())){
-                matchingAttributes++;
-            }
-            if (Objects.equals(g.getTopWood(), guitar.getTopWood())){
-                matchingAttributes++;
-            }
-            if (matchingAttributes > attributes){
-                result.clear();
-                result.add(guitar);
-                attributes = matchingAttributes;
-            }
-            else if(matchingAttributes == attributes){
-                result.add(guitar);
+    public static Guitar getGuitar(String serialNumber) throws IOException{
+        Guitar result = null;
+        List<Guitar> guitars = findAll();
+        for (Guitar data : guitars){
+            if (data.getSerialNumber().equals(serialNumber)){
+                result = data;
             }
         }
         return result;
     }
 
+    public static List<Guitar> search(Guitar guitar) throws IOException{
+        List<Guitar> results = new ArrayList<>();
+        List<Guitar> guitars = findAll();
+        for (Guitar data : guitars){
+            if (compare(guitar, data)){
+                results.add(data);
+            }
+        }
+        return results;
+    }
+
+    public static boolean compare(Guitar guitar, Guitar target){
+
+        String serialNumber = guitar.getSerialNumber();
+        double price = guitar.getPrice();
+        String builder = guitar.getBuilder();
+        String model = guitar.getModel();
+        String type = guitar.getType();
+        String backWood = guitar.getBackWood();
+        String topWood = guitar.getTopWood();
+
+        if (serialNumber == null && builder == null && model == null && type == null && backWood == null && topWood == null && price == 0){
+            return false;
+        }
+
+        if (serialNumber != null){
+            if (!(serialNumber.equals(target.getSerialNumber()))){
+                return false;
+            }}
+        if (price != 0){
+            if (!(price == target.getPrice())){
+                return false;
+            }}
+        if (builder != null){
+            if (!(builder.equals(target.getBuilder()))){
+                return false;
+            }}
+        if (model != null){
+            if (!(model.equals(target.getModel()))){
+                return false;
+            }}
+        if (type != null){
+            if (!(type.equals(target.getType()))){
+                return false;
+            }}
+        if (backWood != null){
+            if (!(backWood.equals(target.getBackWood()))){
+                return false;
+            }}
+        if (topWood != null){
+            if (!(topWood.equals(target.getTopWood()))){
+                return false;
+            }}
+
+        return true;
+    }
+
 
 }
+
