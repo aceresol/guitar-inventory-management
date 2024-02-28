@@ -2,3 +2,5 @@
 1234,10.0,Fender,Strato,acoustic,Mahogany,Mahogany
 3211,11.0,Fender,v1,electric,Maple,Cedar
 1234,12.0,Gibson,v1,acoustic,Mahogany,Maple
+3211,11.0,Fender,v1,electric,Maple,Cedar
+1234,12.0,Gibson,v1,acoustic,Mahogany,Maple
