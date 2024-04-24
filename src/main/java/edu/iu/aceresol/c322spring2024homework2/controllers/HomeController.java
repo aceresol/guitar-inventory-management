@@ -9,5 +9,6 @@ public class HomeController {
     @GetMapping("/")
     public String greetings(){
         return "welcome";
+        //
     }
 }
