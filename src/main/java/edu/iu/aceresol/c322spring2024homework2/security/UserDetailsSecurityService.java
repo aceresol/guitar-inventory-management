@@ -1,6 +1,7 @@
 package edu.iu.aceresol.c322spring2024homework2.security;
 
 import edu.iu.aceresol.c322spring2024homework2.model.Customer;
+import edu.iu.aceresol.c322spring2024homework2.repository.CustomerFileRepository;
 import edu.iu.aceresol.c322spring2024homework2.repository.CustomerRepository;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -10,15 +11,13 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class UserDetailsSecurityService implements UserDetailsService {
+
     CustomerRepository customerRepository;
 
-
-    public UserDetailsSecurityService(CustomerRepository
-                                              customerRepository) {
+    public UserDetailsSecurityService(CustomerRepository customerRepository) {
         this.customerRepository = customerRepository;
-
-
     }
+
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         try {
@@ -26,10 +25,7 @@ public class UserDetailsSecurityService implements UserDetailsService {
             if(customer == null) {
                 throw new UsernameNotFoundException("");
             }
-            return User
-                    .withUsername(username)
-                    .password(customer.password())
-                    .build();
+            return User.withUsername(username).password(customer.getPassword()).build();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

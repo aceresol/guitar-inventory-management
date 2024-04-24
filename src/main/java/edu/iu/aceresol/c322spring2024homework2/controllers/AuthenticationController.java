@@ -1,6 +1,7 @@
 package edu.iu.aceresol.c322spring2024homework2.controllers;
 
 import edu.iu.aceresol.c322spring2024homework2.model.Customer;
+import edu.iu.aceresol.c322spring2024homework2.repository.CustomerFileRepository;
 import edu.iu.aceresol.c322spring2024homework2.repository.CustomerRepository;
 import edu.iu.aceresol.c322spring2024homework2.security.TokenService;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -39,8 +40,8 @@ public class AuthenticationController {
         Authentication authentication = authenticationManager
                 .authenticate(
                         new UsernamePasswordAuthenticationToken(
-                                customer.username(),
-                                customer.password()));
+                                customer.getUsername(),
+                                customer.getPassword()));
         return tokenService.generateToken(authentication);
     }
 }

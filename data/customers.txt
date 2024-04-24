@@ -1,0 +1,2 @@
+john,$2a$10$MSDQUAVcuDRbhQne5F3nuebw2mWALnXLIfkL9XOy.EqDG5FHo8J1.,john@email.com
+
